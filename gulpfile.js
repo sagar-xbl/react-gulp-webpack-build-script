@@ -4,7 +4,6 @@ const replace = require('gulp-replace');
 const webpack = require('webpack-stream');
 const del = require('del');
 
-// gulp.task('default', ['copy-src', 'replace-env', 'build', 'clean']);
 gulp.task('default', ['clean']);
 
 gulp.task('copy-src', function () {
@@ -17,7 +16,9 @@ const ENV_KEYS = ['WEB_URL_BASE_CONST', 'WALLET_URL_BASE_CONST', 'TRADING_CHART_
 gulp.task('replace-env', ['copy-src'], () => {
     let task = gulp.src(['./src/constants/web.const.js']);
     ENV_KEYS.forEach((key) => {
-        task = task.pipe(replace(key, "'" + process.env[key] + "'"));
+        if (process.env[key]) {
+            task = task.pipe(replace(key, "'" + process.env[key] + "'"));
+        }
     });
     return task.pipe(gulp.dest('./temp/constants'));
 });
